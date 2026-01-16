@@ -7,6 +7,7 @@ import Share from 'react-native-share';
 export default function Transcript({ route }) {
     const voucherRef = useRef();
     const [showVoucher, setShowVoucher] = useState(false);
+    const [showbackside, setShowbackside] = useState(false);
 
     const { regNo } = route.params;
     const [user, setUser] = useState(null);
@@ -30,6 +31,10 @@ export default function Transcript({ route }) {
                 setLoading(false);
             });
     }, [regNo]);
+
+    const generatebackside = () =>{
+        setShowbackside(true);
+    }
 
     const generateVoucher = () => {
         setShowVoucher(true); // Show the voucher on screen
@@ -140,13 +145,13 @@ export default function Transcript({ route }) {
 
 
     return (
-        <ScrollView contentContainerStyle={{ backgroundColor: 'rgba(226,224,224,1)', flexGrow: 1, paddingTop: 20, alignItems: 'center' }}>
+        <ScrollView contentContainerStyle={{ backgroundColor: 'rgba(226,224,224,1)', flexGrow: 1, paddingTop: 10, alignItems: 'center' }}>
             {loading ? (
                 <ActivityIndicator size="large" />
             ) : user ? (
                 <>
 
-                    <View style={{ backgroundColor: 'rgba(226, 224, 224, 1)', marginTop: 20,width:'100%' }} >
+                    <View style={{ backgroundColor: 'rgba(226, 224, 224, 1)', marginTop: 10,width:'100%' }} >
 
                         <View style={{ backgroundColor: 'white', height: 50 }} >
 
@@ -161,7 +166,7 @@ export default function Transcript({ route }) {
                         </View>
 
 
-                        <View style={{ marginTop: 30, backgroundColor: 'white', height: 200 }}>
+                        <View style={{ marginTop: 20, backgroundColor: 'white', height: 200 }}>
                             <View style={{ margin: 20 }}>
 
                                 <View style={{}}>
@@ -180,7 +185,8 @@ export default function Transcript({ route }) {
                                         <Text style={{ color: 'white', fontSize: 15, fontWeight: '900' }}>Print</Text>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={{ backgroundColor: 'rgba(23, 114, 234, 1)', width: 150, height: 50, borderRadius: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <TouchableOpacity style={{ backgroundColor: 'rgba(23, 114, 234, 1)', width: 150, height: 50, borderRadius: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                                    onPress={generatebackside}>
                                         <Text style={{ color: 'white', fontSize: 15, fontWeight: '900' }}>Print Backside</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -439,6 +445,61 @@ export default function Transcript({ route }) {
                         >
                             <Text style={{ color: 'white', fontWeight: 'bold' }}>Download Voucher</Text>
                         </TouchableOpacity>
+                    )}
+
+                    {/*Back Side*/}
+                    { showbackside && (
+                        <View style={{backgroundColor:'rgba(255, 255, 255)',marginTop:30,width:'100%',height:600}} >
+                            <View style={{ justifyContent:'center' }}>
+                                <Text style={{ textAlign:'center',fontSize:20 }}>Interpretation of Transcript Contents</Text>
+                            </View>
+
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,backgroundColor:'rgb(184, 180, 180)' }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 15, width: 100 }}>Grade</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 15, width: 300 }}>Interpretation</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                <Text style={{ textAlign:'center',fontSize:12,width:100 }}>F/R</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 300 }}>Failed Course replaced with another one</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, width: 100 }}>NC</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 300 }}>	Non-credit course and not included in the calculation of CGPA.</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, width: 100 }}>S</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 290 }}>	Satisfactory, S is counted towards credits but not used in the calculation of CGPA.</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, width: 100 }}>I</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 300 }}>Incomplete, to be replaced by the grade earned later on</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, width: 100 }}>W</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 300 }}>Withdraw</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',borderBottomColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, width: 100 }}>SGPA</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 12, width: 300 }}>	Semester Grade Point Average.</Text>
+                            </View>
+                            <View style={{ borderColor:'black',borderWidth:1,flexDirection:'row',margin:10,borderTopColor:'white',marginTop:-10 }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 15, width: 100 }}>CGPA</Text>
+                                    <Text style={{ textAlign: 'start', fontSize: 15, width: 300 }}>Cumulative Grade Point Average.</Text>
+                            </View>
+
+                            <View style={{ margin:10 }}>
+                                <Text style={{ fontWeight:'bold' }}>Degree Requirements:{'\n'}</Text>
+                                    <Text style={{fontSize:12}}>Cumulative Grade Point Average (CGPA) minimum 2.0 calculated for all semesters.</Text>
+                            </View>
+
+                                <View style={{ margin: 10 }}>
+                                    <Text style={{fontSize:12}}>GPA = Total Grade Points / Total Subjects</Text>
+                                </View>
+
+                            <View style={{ margin:10 }}>
+                                <Text style={{ fontSize:12 }}>CGPA = Total Grade Points / Total Credit Hours</Text>
+                            </View>
+                        </View>
                     )}
                 </>
             ) : (
