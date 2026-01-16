@@ -15,26 +15,6 @@ export default function Login({ navigation, onLoginSuccess }) {
     const [savedCredentials, setSavedCredentials] = useState([]);
     const [showSavedModal, setShowSavedModal] = useState(false);
 
-    // Load saved credentials on mount
-    // useEffect(() => {
-    //     const loadSavedCredentials = async () => {
-    //         try {
-    //             const stored = await AsyncStorage.getItem('savedCredentials');
-    //             if (stored) {
-    //                 const credsArray = JSON.parse(stored);
-    //                 if (credsArray.length > 0) {
-    //                     setSavedCredentials(credsArray);
-    //                     setShowSavedModal(true); // Show popup
-    //                 }
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     loadSavedCredentials();
-    // }, []);
-
-    // Keyboard listeners
     useEffect(() => {
         const showSub = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
         const hideSub = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
@@ -100,9 +80,22 @@ export default function Login({ navigation, onLoginSuccess }) {
                 placeholder="Registration No"
                 placeholderTextColor={'rgba(186,179,179,1)'}
                 value={registrationNo}
+                    onFocus={async () => {
+                        // Load saved credentials from AsyncStorage
+                        try {
+                            const stored = await AsyncStorage.getItem('savedCredentials');
+                            if (stored) {
+                                const credsArray = JSON.parse(stored);
+                                if (credsArray.length > 0) {
+                                    setSavedCredentials(credsArray);
+                                    setShowSavedModal(true); // Show popup only on focus
+                                }
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }}
                 onChangeText={setRegistrationNo}
-                // onFocus={loadSavedCredentials} // Load saved credentials on focus
-                onFocus={() => setShowSavedModal(true)} // Show popup on focus
                 style={{ borderWidth: 1, width: 350, padding: 10, borderRadius: 5, color: 'black', marginBottom: 20,borderColor:'rgb(225, 224, 224)' }}
                 />
             <TextInput
@@ -185,7 +178,8 @@ export default function Login({ navigation, onLoginSuccess }) {
                             )}
                         />
                         <TouchableOpacity
-                            onPress={() => setShowSavedModal(false)}
+                            onPress={() => setShowSavedModal(false)
+                               }
                             style={{ alignItems: 'center', marginTop: 10 }}
                         >
                             <Text style={{ color: 'blue' }}>Close</Text>
