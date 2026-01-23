@@ -62,6 +62,34 @@ export default function Login({ navigation, onLoginSuccess }) {
         setShowSavedModal(false); // Close popup
     };
 
+    const deleteCredential = async (index) => {
+        Alert.alert(
+            "Delete",
+            "Are you sure you want to delete this credential?",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            // Remove from state
+                            const updated = savedCredentials.filter((_, i) => i !== index);
+                            setSavedCredentials(updated);
+
+                            // Save updated array to AsyncStorage
+                            await AsyncStorage.setItem('savedCredentials', JSON.stringify(updated));
+                        } catch (error) {
+                            console.log('Error deleting credential:', error);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+
+
     return (
         <View style={{ flex: 1, marginTop: keyboardVisible ? -80 : 0, alignItems: 'center' }}>
             <Image
@@ -163,30 +191,66 @@ export default function Login({ navigation, onLoginSuccess }) {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <View style={{ width: 300, backgroundColor: 'white', borderRadius: 10, padding: 20 }}>
+                    <View style={{
+                        width: 300,
+                        backgroundColor: 'white',
+                        borderRadius: 10,
+                        padding: 20
+                    }}>
                         <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Saved Credentials</Text>
+
                         <FlatList
                             data={savedCredentials}
                             keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    onPress={() => fillFromSaved(item)}
-                                    style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}
+                            renderItem={({ item, index }) => (
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        borderBottomWidth: 1,
+                                        borderColor: '#ccc',
+                                    }}
                                 >
-                                    <Text>{item.registrationNo}</Text>
-                                </TouchableOpacity>
+                                    {/* Tap to fill from saved */}
+                                    <TouchableOpacity
+                                        onPress={() => fillFromSaved(item)}
+                                        style={{ padding: 10, flex: 1 }}
+                                    >
+                                        <Text>{item.registrationNo}</Text>
+                                    </TouchableOpacity>
+
+                                    {/* Delete button */}
+                                    <TouchableOpacity
+                                        onPress={() => deleteCredential(index)}
+                                        style={{ padding: 10 }}
+                                    >
+                                        <Text style={{ color: 'red', fontWeight: 'bold' }}>
+                                            Delete
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             )}
                         />
+
+                        {/* Close button */}
                         <TouchableOpacity
-                            onPress={() => setShowSavedModal(false)
-                               }
-                            style={{ alignItems: 'center', marginTop: 10 }}
+                            onPress={() => setShowSavedModal(false)}
+                            style={{
+                                alignItems: 'center',
+                                marginTop: 10,
+                                padding: 10,
+                                backgroundColor: 'blue',
+                                borderRadius: 5,
+                            }}
                         >
-                            <Text style={{ color: 'blue' }}>Close</Text>
+                            <Text style={{ color: 'white' }}>Close</Text>
                         </TouchableOpacity>
+
                     </View>
                 </View>
             </Modal>
+
         </View>
     );
 }
